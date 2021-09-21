@@ -114,12 +114,14 @@ function openModalWithTargetImage(event) {
   refs.lightboxImage.src = event.target.dataset.source;
   refs.lightboxImage.alt = event.target.alt;
   window.addEventListener('keydown', closeModalByEsc);
+  window.addEventListener('keydown', changeImageByArrows);
 }
 
 function closeModal() {
   refs.lightboxContainer.classList.remove('is-open');
   refs.lightboxImage.src = '';
   window.removeEventListener('keydown', closeModalByEsc);
+  window.removeEventListener('keydown', changeImageByArrows);
 }
 
 function closeModalByOverlay(event) {
@@ -134,4 +136,21 @@ function closeModalByEsc(event) {
   }
 }
 
-// workdesk ......
+function changeImageByArrows(event) {
+  const largeImagesArray = galleryItems.map(elem => elem.original);
+
+  const currentImageIndex = largeImagesArray.indexOf(refs.lightboxImage.src);
+  if (event.code === 'ArrowLeft') {
+    let nextImageIndex = currentImageIndex - 1;
+    if (nextImageIndex === -1) {
+      nextImageIndex = largeImagesArray.length - 1;
+    }
+    refs.lightboxImage.src = largeImagesArray[nextImageIndex];
+  } else if (event.code === 'ArrowRight') {
+    let nextImageIndex = currentImageIndex + 1;
+    if (nextImageIndex === largeImagesArray.length) {
+      nextImageIndex = 0;
+    }
+    refs.lightboxImage.src = largeImagesArray[nextImageIndex];
+  }
+}
