@@ -1,3 +1,4 @@
+// data
 const galleryItems = [
   {
     preview:
@@ -63,3 +64,74 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+// elements
+const refs = {
+  galleryContainer: document.querySelector('.js-gallery'),
+  lightboxContainer: document.querySelector('.js-lightbox'),
+  lightboxOverlay: document.querySelector('.lightbox__overlay'),
+  lightboxImage: document.querySelector('.lightbox__image'),
+  modalCloseBtn: document.querySelector('button[data-action="close-lightbox"]'),
+};
+
+// operations
+const galleryContent = createGalleryItemsMarkup(galleryItems);
+refs.galleryContainer.innerHTML = galleryContent;
+
+refs.galleryContainer.addEventListener('click', openModalWithTargetImage);
+refs.modalCloseBtn.addEventListener('click', closeModal);
+refs.lightboxOverlay.addEventListener('click', closeModalByOverlay);
+
+// functions
+function createGalleryItemsMarkup(array) {
+  return array
+    .map(({ preview, original, description }) => {
+      return `
+      <li class="gallery__item">
+        <a
+          class="gallery__link"
+          href="${original}"
+        >
+          <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>
+    `;
+    })
+    .join('');
+}
+
+function openModalWithTargetImage(event) {
+  event.preventDefault();
+  if (event.currentTarget === event.target) {
+    return;
+  }
+  refs.lightboxContainer.classList.add('is-open');
+  refs.lightboxImage.src = event.target.dataset.source;
+  refs.lightboxImage.alt = event.target.alt;
+  window.addEventListener('keydown', closeModalByEsc);
+}
+
+function closeModal() {
+  refs.lightboxContainer.classList.remove('is-open');
+  refs.lightboxImage.src = '';
+  window.removeEventListener('keydown', closeModalByEsc);
+}
+
+function closeModalByOverlay(event) {
+  if (event.target === event.currentTarget) {
+    closeModal();
+  }
+}
+
+function closeModalByEsc(event) {
+  if (event.code === 'Escape') {
+    closeModal();
+  }
+}
+
+// workdesk ......
