@@ -79,8 +79,6 @@ const galleryContent = createGalleryItemsMarkup(galleryItems);
 refs.galleryContainer.innerHTML = galleryContent;
 
 refs.galleryContainer.addEventListener('click', openModalWithTargetImage);
-refs.modalCloseBtn.addEventListener('click', closeModal);
-refs.lightboxOverlay.addEventListener('click', closeModalByOverlay);
 
 // functions
 function createGalleryItemsMarkup(array) {
@@ -113,6 +111,9 @@ function openModalWithTargetImage(event) {
   refs.lightboxContainer.classList.add('is-open');
   refs.lightboxImage.src = event.target.dataset.source;
   refs.lightboxImage.alt = event.target.alt;
+
+  refs.modalCloseBtn.addEventListener('click', closeModal);
+  refs.lightboxOverlay.addEventListener('click', closeModalByOverlay);
   window.addEventListener('keydown', closeModalByEsc);
   window.addEventListener('keydown', changeImageByArrows);
 }
@@ -120,6 +121,9 @@ function openModalWithTargetImage(event) {
 function closeModal() {
   refs.lightboxContainer.classList.remove('is-open');
   refs.lightboxImage.src = '';
+
+  refs.modalCloseBtn.removeEventListener('click', closeModal);
+  refs.lightboxOverlay.removeEventListener('click', closeModalByOverlay);
   window.removeEventListener('keydown', closeModalByEsc);
   window.removeEventListener('keydown', changeImageByArrows);
 }
